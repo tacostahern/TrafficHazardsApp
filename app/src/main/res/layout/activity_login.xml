@@ -53,10 +53,12 @@
         android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="88dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="92dp"
         android:text="Sign In"
-        app:layout_constraintStart_toEndOf="@+id/password"
+        app:layout_constraintEnd_toEndOf="@+id/passInput"
+        app:layout_constraintHorizontal_bias="0.008"
+        app:layout_constraintStart_toStartOf="@+id/password"
         app:layout_constraintTop_toBottomOf="@+id/passInput" />
 
     <Button
@@ -65,6 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="116dp"
         android:text="Don't have an account? Signup here!"
+        app:layout_constraintEnd_toEndOf="@+id/login"
+        app:layout_constraintHorizontal_bias="0.051"
         app:layout_constraintStart_toStartOf="@+id/password"
         app:layout_constraintTop_toTopOf="@+id/login" />
 </androidx.constraintlayout.widget.ConstraintLayout>
