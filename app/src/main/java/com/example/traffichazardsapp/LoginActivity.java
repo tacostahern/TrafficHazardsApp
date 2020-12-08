@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
         login = findViewById(R.id.login);
         signUp = findViewById(R.id.signUp);
 
-        Intent toMain = new Intent(this, MainActivity.class);
+        Intent toMain = new Intent(this, MapsActivity.class);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
