@@ -11,6 +11,7 @@ import android.widget.Button;
 public class LoginActivity extends AppCompatActivity {
 
     Button login;
+    Button signUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,17 +19,24 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         login = findViewById(R.id.login);
+        signUp = findViewById(R.id.signUp);
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent toMain = new Intent(this, MainActivity.class);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                startActivity(intent);
+                startActivity(toMain);
             }
         });
 
-
+        Intent toSignUp = new Intent(this, SignUp.class);
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(toSignUp);
+            }
+        });
 
 
     }
