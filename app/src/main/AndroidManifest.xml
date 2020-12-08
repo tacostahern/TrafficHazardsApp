@@ -11,6 +11,7 @@
         android:theme="@style/Theme.TrafficHazardsApp">
         <activity android:name=".Maps"></activity>
         <activity android:name=".MainActivity" />
+        <activity android:name=".SignUp" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
