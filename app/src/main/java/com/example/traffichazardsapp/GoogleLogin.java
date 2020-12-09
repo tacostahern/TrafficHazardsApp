@@ -28,7 +28,8 @@ public class GoogleLogin extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (mAuth.getCurrentUser() != null)
+            toMaps();
     }
 
     @Override

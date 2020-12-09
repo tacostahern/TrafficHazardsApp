@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="@+id/username" />
 
     <EditText
-        android:id="@+id/userInput"
+        android:id="@+id/userInput1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="116dp"
@@ -39,7 +39,7 @@
         app:layout_constraintStart_toStartOf="@+id/username" />
 
     <EditText
-        android:id="@+id/passInput"
+        android:id="@+id/passInput1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="116dp"
@@ -47,7 +47,7 @@
         android:ems="10"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="@+id/password"
-        app:layout_constraintTop_toBottomOf="@+id/userInput" />
+        app:layout_constraintTop_toBottomOf="@+id/userInput1" />
 
     <Button
         android:id="@+id/signUp"
@@ -57,6 +57,6 @@
         android:layout_marginTop="88dp"
         android:text="Sign Up"
         app:layout_constraintStart_toEndOf="@+id/password"
-        app:layout_constraintTop_toBottomOf="@+id/passInput" />
+        app:layout_constraintTop_toBottomOf="@+id/passInput1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
