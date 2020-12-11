@@ -17,12 +17,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Map;
+
 public class SignUp extends AppCompatActivity {
 
     Button signUp;
     EditText userInput;
     EditText passInput;
-
+    Button back;
     private FirebaseAuth mAuth;
 
     @Override
@@ -33,8 +35,18 @@ public class SignUp extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         signUp = findViewById(R.id.signUp);
+        back = findViewById(R.id.back);
         userInput = findViewById(R.id.userInput1);
         passInput = findViewById(R.id.passInput1);
+
+        Intent Back = new Intent(this,LoginActivity.class);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toBack();
+            }
+        });
+
 
         Intent toMain = new Intent(this, MapsActivity.class);
         signUp.setOnClickListener(new View.OnClickListener() {
@@ -78,9 +90,14 @@ public class SignUp extends AppCompatActivity {
 
     }
 
+
     public void toMaps()
     {
         Intent intent =  new Intent(this, MapsActivity.class);
+        startActivity(intent);
+    }
+    public void toBack(){
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 }
