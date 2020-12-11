@@ -10,33 +10,62 @@
         android:id="@+id/backMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.049"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/Type"
+        android:layout_width="190dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="40dp"
+        android:prompt="@string/Type"
+        android:spinnerMode="dialog"
+        app:layout_constraintBottom_toBottomOf="@+id/backMain"
+        app:layout_constraintStart_toEndOf="@+id/backMain" />
+
+    <Button
+        android:id="@+id/Upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="532dp"
+        android:text="Upload"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/backMain" />
+
+    <Button
+        android:id="@+id/Take_Photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="532dp"
+        android:text="Take Photo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/backMain" />
 
     <Button
         android:id="@+id/Submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="156dp"
-        android:layout_marginTop="536dp"
+        android:layout_marginTop="532dp"
+        android:layout_marginEnd="4dp"
         android:text="Submit"
-        app:layout_constraintStart_toStartOf="@+id/backMain"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backMain" />
 
-    <Spinner
-        android:id="@+id/Type"
-        android:spinnerMode="dialog"
-        android:prompt="@string/Type"
-        android:layout_width="190dp"
-        android:layout_height="51dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="396dp"
-        app:layout_constraintBottom_toTopOf="@+id/Submit"
-        app:layout_constraintStart_toEndOf="@+id/backMain" />
+    <EditText
+        android:id="@+id/dS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="72dp"
+        android:ems="10"
+
+        android:hint="Enter Description here"
+        android:inputType="textMultiLine"
+        app:layout_constraintStart_toStartOf="@+id/backMain"
+        app:layout_constraintTop_toBottomOf="@+id/Type" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
