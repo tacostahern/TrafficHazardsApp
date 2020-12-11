@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Traffic Hazards App</string>
     <string name="title_activity_maps">Map</string>
+    <string name="Type">What type of hazard?</string>
     <string name="style_json">
   [
     {

@@ -3,5 +3,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
     </style>
+    <string-array name="Types_array">
+        <item> Accident </item>
+        <item> Hazard</item>
+        <item> Construction</item>
+        <item> Other </item>
+    </string-array>
 
 </resources>
