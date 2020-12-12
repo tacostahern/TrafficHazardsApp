@@ -25,14 +25,6 @@ public class GoogleLogin extends AppCompatActivity
     private FirebaseAuth mAuth;
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        if (mAuth.getCurrentUser() != null)
-            toMaps();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -99,7 +91,9 @@ public class GoogleLogin extends AppCompatActivity
 
     public void toMaps()
     {
+        Boolean googleLogin = true;
         Intent intent =  new Intent(this, MapsActivity.class);
+        intent.putExtra("Google Login", googleLogin);
         startActivity(intent);
     }
 }

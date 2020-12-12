@@ -10,7 +10,7 @@
 
     <color name="background">#3B393A</color>
     <color name="button1_solid">#466BFC</color>
-    <color name="button1_outline">#466BFC</color>
+    <color name="button1_outline">#51A7FC</color>
     <color name="text_color">#FA4D95</color>
     <color name="button2_solid">#466BFC</color>
     <color name="button3_solid">#466BFC</color>

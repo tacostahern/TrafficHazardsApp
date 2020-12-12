@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/backMain"
+        android:id="@+id/backMain1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -19,47 +19,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/Type"
-        android:layout_width="190dp"
-        android:layout_height="51dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="76dp"
-        android:prompt="@string/Type"
-        android:spinnerMode="dropdown"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@+id/hazardTypeTitle"
-        app:layout_constraintTop_toBottomOf="@+id/backMain" />
-
     <TextView
         android:id="@+id/hazardTypeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="87dp"
         android:text="Hazard Type"
         android:textColor="@color/white"
         android:textSize="22dp"
-        app:layout_constraintBottom_toBottomOf="@+id/Type"
         app:layout_constraintEnd_toEndOf="@+id/descriptionTitle"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/descriptionTitle"
-        app:layout_constraintTop_toTopOf="@+id/Type"
-        app:layout_constraintVertical_bias="0.523" />
+        app:layout_constraintTop_toBottomOf="@+id/backMain1" />
 
     <TextView
         android:id="@+id/descriptionTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="36dp"
         android:text="Description"
         android:textColor="@color/white"
         android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="@+id/dS"
-        app:layout_constraintEnd_toStartOf="@+id/dS"
-        app:layout_constraintTop_toTopOf="@+id/dS"
+        app:layout_constraintEnd_toStartOf="@+id/dS1"
+        app:layout_constraintTop_toTopOf="@+id/dS1"
         app:layout_constraintVertical_bias="0.533" />
 
     <EditText
-        android:id="@+id/dS"
+        android:id="@+id/dS1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="164dp"
@@ -69,11 +57,11 @@
         android:inputType="textMultiLine"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/backMain"
-        app:layout_constraintTop_toBottomOf="@+id/Type" />
+        app:layout_constraintStart_toStartOf="@+id/backMain1"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
-        android:id="@+id/Upload"
+        android:id="@+id/Upload1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="52dp"
@@ -82,10 +70,10 @@
         android:text="Upload Photo"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backMain" />
+        app:layout_constraintTop_toBottomOf="@+id/backMain1" />
 
     <Button
-        android:id="@+id/Submit"
+        android:id="@+id/Submit1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="532dp"
@@ -94,16 +82,29 @@
         android:text="Submit"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backMain" />
+        app:layout_constraintTop_toBottomOf="@+id/backMain1" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageView1"
         android:layout_width="321dp"
         android:layout_height="236dp"
         android:layout_marginTop="240dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backMain"
+        app:layout_constraintTop_toBottomOf="@+id/backMain1"
         app:srcCompat="@android:drawable/ic_menu_camera" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        android:textSize="22dp"
+        app:layout_constraintBottom_toBottomOf="@+id/hazardTypeTitle"
+        app:layout_constraintStart_toEndOf="@+id/hazardTypeTitle"
+        app:layout_constraintTop_toTopOf="@+id/hazardTypeTitle"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

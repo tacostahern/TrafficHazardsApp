@@ -16,6 +16,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,8 +31,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.common.collect.Maps;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -48,27 +53,62 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private FusedLocationProviderClient fusedLocationClient;
 
+    String desc;
+    String hType;
+    double latitude;
+    double longitude;
+
+    boolean googleLogin;
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        Intent intent = getIntent();
+        googleLogin = intent.getBooleanExtra("Google Login", false);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // ...
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
         Logout = findViewById(R.id.Logout);
         toMarker = findViewById(R.id.Marker);
-
-
 
         //Logout Button
         Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                toLogin();
+                if (googleLogin == true) {
+                    mGoogleSignInClient.signOut().addOnCompleteListener(MapsActivity.this, new OnCompleteListener<Void>() {
+                        Intent logout;
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.d("Sign Out", "Signed out of Google!");
+                            logout = new Intent(MapsActivity.this, LoginActivity.class);
+                            startActivity(logout);
+                        }
+                    });
+                }
+                else {
+                    mAuth.signOut();
+                    toLogin();
+                }
+
             }
         });
 
@@ -80,7 +120,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
     public void toLogin(){
-        Intent intent = new Intent(this, LoginActivity.class);
+        Log.d("Sign out", "Signed out of Firebase!");
+        Intent intent;
+        intent= new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
     public void toMarker(){
@@ -127,12 +169,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if (location != null) {
                             coords = new LatLng(location.getLatitude(), location.getLongitude());
                             cameraPosition = new CameraPosition(coords, 15, 0, 0);
-                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                             Marker home = mMap.addMarker(new MarkerOptions().position(coords).icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("home",100,100))));
                         }
                     }
                 });
+
+        localMarker();
 
     }
 
@@ -140,5 +184,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
         return resizedBitmap;
+    }
+
+    //For getting info from previous activity and making a marker
+    public void localMarker () {
+        Intent fromMain = getIntent();
+        desc = fromMain.getStringExtra("Description");
+        hType = fromMain.getStringExtra("Hazard Type");
+        latitude = fromMain.getDoubleExtra("Latitude", 0.0);
+        longitude = fromMain.getDoubleExtra("Longitude", 0.0);
+
+        final LatLng location = new LatLng(latitude, longitude);
+
+        Marker hazard = mMap.addMarker(new MarkerOptions().position(location).title(hType));
+
+        hazard.showInfoWindow();
     }
 }

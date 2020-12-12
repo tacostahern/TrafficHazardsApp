@@ -44,12 +44,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    public void onStart() {
-        super.onStart();
-        if (mAuth.getCurrentUser() != null)
-            toMaps();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,7 +173,9 @@ public class LoginActivity extends AppCompatActivity {
 
     public void toMaps()
     {
+        Boolean googleLogin = false;
         Intent intent =  new Intent(this, MapsActivity.class);
+        intent.putExtra("Google Login", googleLogin);
         startActivity(intent);
     }
 

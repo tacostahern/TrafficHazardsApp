@@ -29,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     Button Upload;
     EditText description;
     Spinner hType;
+    ImageView imageView;
 
     //For use in getting the image
     File currentImageFile;
@@ -108,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         Upload = findViewById(R.id.Upload);
         description = findViewById(R.id.dS);
         hType = findViewById(R.id.Type);
+        imageView = findViewById(R.id.imageView);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -134,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toBack();
+                toMaps();
             }
         });
         Upload.setOnClickListener(new View.OnClickListener() {
@@ -146,11 +149,9 @@ public class MainActivity extends AppCompatActivity {
         Submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fieldName = String.valueOf(currentTimeMillis());
                 desc = description.getText().toString();
                 hazardType = String.valueOf(hType.getSelectedItem());
                 addNewMarker(v);
-                toMaps();
             }
         });
 
@@ -185,12 +186,21 @@ public class MainActivity extends AppCompatActivity {
                             field.put("Description", desc);
                             field.put("Hazard Type", hazardType);
                             field.put("Location", coords);
+                            field.put("Time taken", System.currentTimeMillis());
+
+                            Intent makeMarker = new Intent(MainActivity.this, MapsActivity.class);
+                            makeMarker.putExtra("Description", desc);
+                            makeMarker.putExtra("Hazard Type", hazardType);
+                            makeMarker.putExtra("Latitude", location.getLatitude());
+                            makeMarker.putExtra("Longitude", location.getLongitude());
+
                             //field.put("Location", coords);
                             db.collection("Markers").add(field)
                                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                         @Override
                                         public void onSuccess(DocumentReference documentReference) {
                                             Log.d("Finished", "Finished upload!");
+                                            startActivity(makeMarker);
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -212,11 +222,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    //takes us back to LoginActivity.class
-    public void toBack(){
-        Intent intent = new Intent(this,LoginActivity.class);
-        startActivity(intent);
-    }
+    //takes us back to the maps class
     public void toMaps(){
         Intent intent = new Intent(this,MapsActivity.class);
         startActivity(intent);
@@ -254,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        builder.setTitle("Field Picture");
+        builder.setTitle("Hazard Picture");
         builder.setMessage("Take picture from:");
 
         AlertDialog dialog = builder.create();
@@ -308,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         fieldImageBitmap = BitmapFactory.decodeStream(imageStream);
+        imageView.setImageURI(selectedImage);
     }
 
     private void processGallery(Intent data) {
@@ -324,11 +331,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         fieldImageBitmap = BitmapFactory.decodeStream(imageStream);
-        makeCustomToast(this,
-                String.format(Locale.getDefault(),
-                        "Gallery Image Size:%n%,d bytes", fieldImageBitmap.getByteCount()),
-                Toast.LENGTH_LONG);
-
+        imageView.setImageURI(galleryImageUri);
     }
 
     public static void makeCustomToast(Context context, String message, int time) {
@@ -344,6 +347,7 @@ public class MainActivity extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         fieldImageBitmap.compress(Bitmap.CompressFormat.JPEG, 25, baos);
         byte[] data = baos.toByteArray();
+        fieldName = String.valueOf(currentTimeMillis());
         String path = mAuth.getUid() + "/" + fieldName + ".jpg";
         mStorageRef = mStorageRef.child(path);
         UploadTask uploadTask = mStorageRef.putBytes(data);
