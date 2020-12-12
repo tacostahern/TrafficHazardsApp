@@ -30,7 +30,7 @@
         android:id="@+id/hazardTypeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="Hazard Type"
         android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="@+id/Type"
         app:layout_constraintEnd_toEndOf="@+id/descriptionTitle"
