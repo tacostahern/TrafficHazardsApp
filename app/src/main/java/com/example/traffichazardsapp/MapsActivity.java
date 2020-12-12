@@ -1,26 +1,52 @@
 package com.example.traffichazardsapp;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.common.collect.Maps;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.GeoPoint;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import java.util.HashMap;
+import java.util.Map;
+
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     Button Logout;
-    Button Marker;
+    Button toMarker;
+
+    CameraPosition cameraPosition;
+
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +57,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
         Logout = findViewById(R.id.Logout);
-        Marker = findViewById(R.id.Marker);
+        toMarker = findViewById(R.id.Marker);
+
+
 
         //Logout Button
         Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
                 toLogin();
             }
         });
 
-        Marker.setOnClickListener(new View.OnClickListener() {
+        toMarker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toMarker();
@@ -50,15 +80,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
     public void toLogin(){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
     public void toMarker(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-
-
 
 
     /**
@@ -84,9 +112,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.e("TAG", "Style parsing failed.");
         }
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d("TAG", "No location!");
+        }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener( new OnSuccessListener<Location>() {
+                    LatLng coords;
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+
+                        if (location != null) {
+                            coords = new LatLng(location.getLatitude(), location.getLongitude());
+                            cameraPosition = new CameraPosition(coords, 15, 0, 0);
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                            Marker home = mMap.addMarker(new MarkerOptions().position(coords).icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("home",100,100))));
+                        }
+                    }
+                });
+
+    }
+
+    public Bitmap resizeMapIcons(String iconName, int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
     }
 }

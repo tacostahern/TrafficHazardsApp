@@ -118,8 +118,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Spinner
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Types_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Types_array, R.layout.spinner_list);
+        adapter.setDropDownViewResource(R.layout.spinner_list);
         Type.setAdapter(adapter);
 
         if (Build.VERSION.SDK_INT >= 24) {
@@ -164,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d("TAG", "No location!");
-
         }
 
         Log.d("Location", "Location!");

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".MainActivity">
 
     <Button
@@ -12,6 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Back"
+        android:background="@drawable/button2"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,7 +25,8 @@
         android:layout_marginStart="36dp"
         android:layout_marginTop="76dp"
         android:prompt="@string/Type"
-        android:spinnerMode="dialog"
+        android:spinnerMode="dropdown"
+        android:textColor="@color/white"
         app:layout_constraintStart_toEndOf="@+id/hazardTypeTitle"
         app:layout_constraintTop_toBottomOf="@+id/backMain" />
 
@@ -32,6 +36,7 @@
         android:layout_height="wrap_content"
         android:text="Hazard Type"
         android:textSize="22dp"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/Type"
         app:layout_constraintEnd_toEndOf="@+id/descriptionTitle"
         app:layout_constraintHorizontal_bias="0.0"
@@ -46,6 +51,7 @@
         android:layout_marginEnd="8dp"
         android:text="Description"
         android:textSize="22dp"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/dS"
         app:layout_constraintEnd_toStartOf="@+id/dS"
         app:layout_constraintTop_toTopOf="@+id/dS"
@@ -58,7 +64,8 @@
         android:layout_marginStart="136dp"
         android:layout_marginTop="32dp"
         android:ems="10"
-
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         android:hint="Enter Description here"
         android:inputType="textMultiLine"
         app:layout_constraintStart_toStartOf="@+id/backMain"
@@ -71,6 +78,8 @@
         android:layout_marginStart="72dp"
         android:layout_marginTop="532dp"
         android:text="Upload"
+        android:background="@drawable/button2"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backMain" />
 
@@ -81,6 +90,8 @@
         android:layout_marginTop="532dp"
         android:layout_marginEnd="100dp"
         android:text="Submit"
+        android:background="@drawable/button2"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backMain" />
 
