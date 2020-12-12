@@ -10,10 +10,14 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +33,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -65,15 +71,19 @@ public class MainActivity extends AppCompatActivity {
     EditText description;
     Spinner hType;
 
+    //For use in getting the image
     File currentImageFile;
-    String fieldUri;
+    String uri;
     Bitmap fieldImageBitmap;
 
-    String fieldName;
+
+    String fieldName; //for naming the photo
+
+    //for taking in input from the user
     String desc;
     String hazardType;
 
-    private StorageReference storageRef;
+    //for use in connecting to Firebase
     Uri downloadUri;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -85,11 +95,13 @@ public class MainActivity extends AppCompatActivity {
     private static int FILE_REQUEST_CODE = 120;
 
     GeoPoint location;
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Submit = findViewById(R.id.Submit);
         back = findViewById(R.id.backMain);
         Type = findViewById(R.id.Type);
@@ -102,17 +114,19 @@ public class MainActivity extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://traffic-hazards-app.appspot.com");
 
         location = new GeoPoint(0.0, 0.0);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
 
         //Spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Types_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Type.setAdapter(adapter);
 
-        if(Build.VERSION.SDK_INT>=24){
-            try{
+        if (Build.VERSION.SDK_INT >= 24) {
+            try {
                 Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
                 m.invoke(null);
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -135,13 +149,71 @@ public class MainActivity extends AppCompatActivity {
                 fieldName = String.valueOf(currentTimeMillis());
                 desc = description.getText().toString();
                 hazardType = String.valueOf(hType.getSelectedItem());
-                addNewField(v);
+                addNewMarker(v);
                 toMaps();
             }
         });
 
 
     }
+
+
+
+    public void getLocation() {
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d("TAG", "No location!");
+
+        }
+
+        Log.d("Location", "Location!");
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener( new OnSuccessListener<Location>() {
+                    GeoPoint coords;
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+
+                        if (location != null) {
+                            // Logic to handle location object
+                            coords = new GeoPoint(location.getLatitude(), location.getLongitude());
+
+                            //Used to upload data to firestore database
+                            Map<String, Object> field = new HashMap<>();
+
+                            field.put("Description", desc);
+                            field.put("Hazard Type", hazardType);
+                            field.put("Location", coords);
+                            //field.put("Location", coords);
+                            db.collection("Markers").add(field)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            Log.d("Finished", "Finished upload!");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("TAG", "Error writing document", e);
+                                        }
+                                    });
+                            Log.d("TAG", "Not Null Location!");
+                        } else {
+                            // Handle failures
+                            // ...
+                            Log.d("TAG", "Null Location!");
+                        }
+                    }
+                    });
+
+    }
+
+
+
+    //takes us back to LoginActivity.class
     public void toBack(){
         Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
@@ -227,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void processCamera() {
         Uri selectedImage = Uri.fromFile(currentImageFile);
-        fieldUri = String.valueOf(selectedImage);
+        uri = String.valueOf(selectedImage);
         InputStream imageStream = null;
 
         try {
@@ -241,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void processGallery(Intent data) {
         Uri galleryImageUri = data.getData();
-        fieldUri = String.valueOf(galleryImageUri);
+        uri = String.valueOf(galleryImageUri);
         if (galleryImageUri == null)
             return;
 
@@ -269,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
         toast.show();
     }
 
-    public void addNewField(View view) {
+    public void addNewMarker(View view) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         fieldImageBitmap.compress(Bitmap.CompressFormat.JPEG, 25, baos);
         byte[] data = baos.toByteArray();
@@ -292,44 +364,14 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     downloadUri = task.getResult();
-
-                    Map<String, Object> field = new HashMap<>();
-                    /*
-                    field.put("name", fieldNameValue);
-                    field.put("location", locationValue);
-                    field.put("description", descriptionValue);
-
-                    field.put("imageUri", downloadUri.toString());
-                    field.put("uid", currentUser.getUid());
-                    field.put("status", "New");
-                    field.put("lastPublishedDate", new Timestamp(new Date()));
-
-                     */
-
-                    field.put("Location", location);
-                    field.put("Description", desc);
-                    field.put("Hazard Type", hazardType);
-
-                    db.collection("Markers").add(field)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Log.d("Finished", "Finished upload!");
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w("TAG", "Error writing document", e);
-                                }
-                            });
-                } else {
-                    // Handle failures
-                    // ...
+                    getLocation();
                 }
             }
         });
 
     }
 
+
+
 }
+
