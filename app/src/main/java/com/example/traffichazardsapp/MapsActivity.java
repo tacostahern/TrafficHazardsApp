@@ -20,6 +20,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     Button Logout;
+    Button Marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         Logout = findViewById(R.id.Logout);
+        Marker = findViewById(R.id.Marker);
 
         //Logout Button
         Logout.setOnClickListener(new View.OnClickListener() {
@@ -39,11 +41,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 toLogin();
             }
         });
+
+        Marker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toMarker();
+            }
+        });
     }
     public void toLogin(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+    public void toMarker(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+
+
 
     /**
      * Manipulates the map once available.
