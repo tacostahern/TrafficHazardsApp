@@ -57,6 +57,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     String hType;
     double latitude;
     double longitude;
+    String fieldName;
 
     boolean googleLogin;
     private FirebaseAuth mAuth;
@@ -176,7 +177,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 });
 
-        localMarker();
+        localMarker(mMap);
 
     }
 
@@ -187,17 +188,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     //For getting info from previous activity and making a marker
-    public void localMarker () {
+    public void localMarker (GoogleMap map) {
         Intent fromMain = getIntent();
         desc = fromMain.getStringExtra("Description");
         hType = fromMain.getStringExtra("Hazard Type");
         latitude = fromMain.getDoubleExtra("Latitude", 0.0);
         longitude = fromMain.getDoubleExtra("Longitude", 0.0);
+        fieldName = fromMain.getStringExtra("Time Taken");
 
         final LatLng location = new LatLng(latitude, longitude);
 
-        Marker hazard = mMap.addMarker(new MarkerOptions().position(location).title(hType));
-
+        Marker hazard = map.addMarker(new MarkerOptions().position(location).title(hType));
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Intent intent = new Intent(MapsActivity.this, MarkerActivity.class);
+                intent.putExtra("Latitude", latitude);
+                intent.putExtra("Longitude", longitude);
+                intent.putExtra("Time Taken", fieldName);
+                startActivity(intent);
+                return false;
+            }
+        });
         hazard.showInfoWindow();
+
     }
+
 }

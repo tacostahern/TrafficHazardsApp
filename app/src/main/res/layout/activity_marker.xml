@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".MainActivity">
+    tools:context=".MarkerActivity">
 
     <Button
         android:id="@+id/backMain1"
@@ -23,17 +23,17 @@
         android:id="@+id/hazardTypeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="87dp"
+        android:layout_marginTop="348dp"
         android:text="Hazard Type"
         android:textColor="@color/white"
         android:textSize="22dp"
-        app:layout_constraintEnd_toEndOf="@+id/descriptionTitle"
+        app:layout_constraintEnd_toEndOf="@+id/descriptionTitle1"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/descriptionTitle"
+        app:layout_constraintStart_toStartOf="@+id/descriptionTitle1"
         app:layout_constraintTop_toBottomOf="@+id/backMain1" />
 
     <TextView
-        android:id="@+id/descriptionTitle"
+        android:id="@+id/descriptionTitle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -46,60 +46,32 @@
         app:layout_constraintTop_toTopOf="@+id/dS1"
         app:layout_constraintVertical_bias="0.533" />
 
-    <EditText
+    <TextView
         android:id="@+id/dS1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="164dp"
         android:layout_marginTop="36dp"
-        android:ems="10"
-        android:hint="Enter Description here"
-        android:inputType="textMultiLine"
         android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:textSize="22dp"
         app:layout_constraintStart_toStartOf="@+id/backMain1"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <Button
-        android:id="@+id/Upload1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="532dp"
-        android:background="@drawable/button1"
-        android:text="Upload Photo"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backMain1" />
-
-    <Button
-        android:id="@+id/Submit1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="532dp"
-        android:layout_marginEnd="60dp"
-        android:background="@drawable/button1"
-        android:text="Submit"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backMain1" />
+        app:layout_constraintTop_toBottomOf="@+id/hazardType" />
 
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="321dp"
         android:layout_height="236dp"
-        android:layout_marginTop="240dp"
+        android:layout_marginTop="68dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backMain1"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/hazardType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:text="TextView"
         android:textColor="@color/white"
         android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="@+id/hazardTypeTitle"

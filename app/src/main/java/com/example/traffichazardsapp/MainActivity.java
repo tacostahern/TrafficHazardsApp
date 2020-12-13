@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
         mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://traffic-hazards-app.appspot.com");
 
         location = new GeoPoint(0.0, 0.0);
@@ -183,16 +184,18 @@ public class MainActivity extends AppCompatActivity {
                             //Used to upload data to firestore database
                             Map<String, Object> field = new HashMap<>();
 
-                            field.put("Description", desc);
-                            field.put("Hazard Type", hazardType);
-                            field.put("Location", coords);
-                            field.put("Time taken", System.currentTimeMillis());
+                            field.put("description", desc);
+                            field.put("hazardType", hazardType);
+                            field.put("location", coords);
+                            field.put("timeTaken", fieldName);
+                            field.put("imageUri", downloadUri.toString());
 
                             Intent makeMarker = new Intent(MainActivity.this, MapsActivity.class);
                             makeMarker.putExtra("Description", desc);
                             makeMarker.putExtra("Hazard Type", hazardType);
                             makeMarker.putExtra("Latitude", location.getLatitude());
                             makeMarker.putExtra("Longitude", location.getLongitude());
+                            makeMarker.putExtra("Time Taken", fieldName);
 
                             //field.put("Location", coords);
                             db.collection("Markers").add(field)
@@ -334,14 +337,6 @@ public class MainActivity extends AppCompatActivity {
         imageView.setImageURI(galleryImageUri);
     }
 
-    public static void makeCustomToast(Context context, String message, int time) {
-        Toast toast = Toast.makeText(context, message, time);
-        View toastView = toast.getView();
-        TextView tv = toast.getView().findViewById(android.R.id.message);
-        tv.setPadding(50, 25, 50, 25);
-        tv.setTextColor(Color.WHITE);
-        toast.show();
-    }
 
     public void addNewMarker(View view) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
